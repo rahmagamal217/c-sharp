@@ -1,12 +1,102 @@
 using System;  
-using System.Collections;  
-using System.Collections.Generic;  
-using System.Linq;  
-using System.Text;  
-using System.Threading.Tasks;
 
 namespace task
 {
+    public class Person
+    {
+        protected string Name;
+        protected int Age;
+        public Person(int age, string name){
+            if(name == null || name == "" || name.Length >=32)
+            {
+               throw new Exception("Invalid Name");
+            }
+
+            if(age <= 0 || age > 128)
+            {
+              throw new Exception("Invalid Age");
+            }
+            Name=name;
+            Age=age;
+        }
+        public virtual void print(){
+            Console.WriteLine($"My name is {Name}, my age is {Age}");
+        }    
+    }
+    public class DataBase
+    {
+        int current_index;
+        public Person[] people = new Person[50];
+
+        public void AddStudent (Student student){
+            people[current_index++]=student;
+        }
+        public void AddStaff (Staff staff){
+            people[current_index++]=staff;
+        }
+        public void AddPerson (Person person){
+            people[current_index++]=person;
+        }
+        public void PrintAll(){
+            for (int i = 0; i < current_index; i++)
+            {
+                people[i].print();
+            }
+        }
+    }
+
+    public class Student : Person
+    {
+        public int Year;
+
+        public float Gpa;
+
+        public Student(string name, int age, int year, float gpa) : base(age, name)
+        {
+            if(!(year >= 1 && year <= 5))
+            {
+               throw new Exception("Invalid Year");
+            }
+
+            if(!(gpa >= 0 && gpa <= 4))
+            {
+               throw new Exception("Invalid Gpa");
+            }
+
+            Year=year;
+
+            Gpa=gpa;
+        }
+
+        public override void print(){
+            Console.WriteLine($"My name is {Name}, my age is {Age}, and gpa is {Gpa}");
+        }
+    }
+    public class Staff : Person
+    {
+        public double Salary;
+        public int JoinYear;
+
+        public Staff(string name, int age, double salary, int joinYear) : base(age, name){
+            if(salary <= 0 || salary > 120_000)
+            {
+               throw new Exception("Invalid Salary");
+            }
+            DateTime date=DateTime.Today;
+            int birthYear=date.Year-Age;
+            if((joinYear-birthYear) < 21)
+            {
+              throw new Exception("Invalid JoinYear");
+            }
+
+            Salary=salary;
+            JoinYear=joinYear;
+        }
+        public override void print(){
+            Console.WriteLine($"My name is {Name}, my age is {Age}, and my salary is {Salary}");
+        }
+    }
+
     public static class Program
     {
         public static void Main(string[] args){
@@ -46,7 +136,7 @@ namespace task
                  Console.WriteLine("Enter your salary");
                  var salary=Convert.ToInt32(Console.ReadLine());
                  Console.WriteLine("Enter your joinYear");
-                 var joinYear=Convert.ToSingle(Console.ReadLine());
+                 var joinYear=Convert.ToInt32(Console.ReadLine());
                  try
                  {
                      Staff staff=new Staff(name2, age2, salary, joinYear);
@@ -65,7 +155,7 @@ namespace task
                  var age3=Convert.ToInt32(Console.ReadLine());
                  try
                  {
-                     Person person=new Person(name3, age3);
+                     Person person=new Person(age3, name3);
                      data.AddPerson(person);
                  }
                  catch (Exception e)
@@ -75,105 +165,12 @@ namespace task
                  }
                  break;
                 case 4:
-                 data.Print();
+                 data.PrintAll();
                  break;
                 
                 default:
                 return;
             }
-        }
-    }
-    public class Person
-    {
-        string name;
-        int age;
-        public Person(int age, string name){
-            if(name == null || name == "" || name.Length >=32)
-            {
-               throw new Exception("Invalid Name");
-            }
-
-            if(age <= 0 || age > 128)
-            {
-              throw new Exception("Invalid Age");
-            }
-            this.name=name;
-            this.age=age;
-        }
-        public abstract void print();    
-    }
-    public class DataBase
-    {
-        int current_index;
-        public person[] people = new person[50];
-
-        public void AddStudent (student student){
-            people[current_index++]=student;
-        }
-        public void AddStaff (Staff staff){
-            people[current_index++]=staff;
-        }
-        public void AddPerson (Person person){
-            people[current_index++]=person;
-        }
-        public void PrintAll(){
-            for (int i = 0; i < current_index; i++)
-            {
-                people[i].print();
-            }
-        }
-    }
-
-    public class Student : Person
-    {
-        public int year;
-
-        public float gpa;
-
-        public Student(string name, int age, int year, float gpa) : base(name, age)
-        {
-            if(year! >= 1 && year! <= 5)
-            {
-               throw new Exception("Invalid Year");
-            }
-
-            if(gpa! >= 0 && gpa! <= 4)
-            {
-               throw new Exception("Invalid Gpa");
-            }
-
-            this.year=year;
-
-            this.gpa=gpa;
-        }
-
-        public override void print(){
-            Console.WriteLine($"My name is {this.name}, my age is {this.age}, and gpa is {this.gpa}");
-        }
-    }
-    public class Staff : Person
-    {
-        public double salary;
-        public int joinYear;
-        var date=DateTime.Today;
-        var birthYear=date.Year-this.age
-
-        public Staff(string name, int age, double salary, int joinYear) : base(name, age){
-            if(salary <= 0 || salary > 120_000)
-            {
-               throw new Exception("Invalid Salary");
-            }
-
-            if((joinYear-birthYear) < 21)
-            {
-              throw new Exception("Invalid JoinYear");
-            }
-
-            this.salary=salary;
-            this.joinYear=joinYear;
-        }
-        public override void print(){
-            Console.WriteLine($"My name is {this.name}, my age is {this.age}, and my salary is {this.salary}");
         }
     }
 
